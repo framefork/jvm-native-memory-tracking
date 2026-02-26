@@ -13,7 +13,7 @@ dependencies {
     implementation("io.micrometer:micrometer-core")
     implementation("io.opentelemetry:opentelemetry-api")
 
-    testImplementation(project(":nmt-testing"))
+    testImplementation(testFixtures(project(":nmt-core")))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.opentelemetry:opentelemetry-sdk-testing")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

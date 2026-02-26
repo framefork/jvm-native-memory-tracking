@@ -1,5 +1,6 @@
 plugins {
     id("framefork.java-public")
+    `java-test-fixtures`
 }
 
 dependencies {
@@ -9,7 +10,11 @@ dependencies {
 
     implementation(libs.slf4j.api)
 
-    testImplementation(project(":nmt-testing"))
+    testFixturesApi(libs.junit.jupiter)
+    testFixturesApi(libs.assertj.core)
+    testFixturesImplementation(libs.logback.classic)
+
+    testImplementation(testFixtures(project))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)
     testImplementation(libs.logback.classic)

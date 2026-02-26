@@ -10,7 +10,7 @@ dependencies {
     compileOnly(libs.spring.boot.autoconfigure)
     annotationProcessor(libs.spring.boot.configuration.processor)
 
-    testImplementation(project(":nmt-testing"))
+    testImplementation(testFixtures(project(":nmt-core")))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)
     testImplementation(libs.logback.classic)
