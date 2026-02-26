@@ -1,0 +1,33 @@
+[versions]
+googleAutoService = "1.1.1"
+errorProne = "2.35.1"
+junit-jupiter = "5.10.3"
+opentelemetry = "1.31.0"
+micrometer = "1.12.0"
+springBoot-v32 = "3.2.12"
+springBoot-v33 = "3.3.13"
+springBoot-v34 = "3.4.13"
+springBoot-v35 = "3.5.11"
+springBoot-v40 = "4.0.3"
+slf4j = "2.0.16"
+
+[libraries]
+jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2" }
+errorprone-annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorProne" }
+autoService-processor = { group = "com.google.auto.service", name = "auto-service", version.ref = "googleAutoService" }
+autoService-annotations = { group = "com.google.auto.service", name = "auto-service-annotations", version.ref = "googleAutoService" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+opentelemetry-api = { module = "io.opentelemetry:opentelemetry-api", version.ref = "opentelemetry" }
+opentelemetry-sdk-testing = { module = "io.opentelemetry:opentelemetry-sdk-testing", version.ref = "opentelemetry" }
+micrometer-core = { module = "io.micrometer:micrometer-core", version.ref = "micrometer" }
+micrometer-test = { module = "io.micrometer:micrometer-test", version.ref = "micrometer" }
+spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "springBoot-v32" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "springBoot-v32" }
+spring-boot-bom-v32 = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "springBoot-v32" }
+spring-boot-bom-v33 = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "springBoot-v33" }
+spring-boot-bom-v34 = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "springBoot-v34" }
+spring-boot-bom-v35 = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "springBoot-v35" }
+spring-boot-bom-v40 = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "springBoot-v40" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+assertj-core = { module = "org.assertj:assertj-core", version = "3.27.4" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version = "1.5.12" }

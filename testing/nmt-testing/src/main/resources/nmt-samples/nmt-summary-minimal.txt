@@ -1,0 +1,20 @@
+12345:
+
+Native Memory Tracking:
+
+Total: reserved=536879104, committed=134230016
+       malloc: 1015808 #3200
+       mmap:   reserved=535863296, committed=133214208
+
+-                 Java Heap (reserved=536870912, committed=134217728)
+                            (mmap: reserved=536870912, committed=134217728, at peak)
+
+-                    Thread (reserved=4104192, committed=4104192)
+                            (threads #4)
+                            (stack: reserved=4096000, committed=4096000, peak=4096000)
+                            (malloc=5056 #25) (peak=5056 #25)
+                            (arena=3136 #7) (peak=3136 #7)
+
+-                        GC (reserved=4096, committed=4096)
+                            (malloc=4096 #10) (at peak)
+

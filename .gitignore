@@ -1,0 +1,6 @@
+.gradle
+.idea
+build/
+*.jar
+JRELEASER_VERSION
+.claude/settings.local.json

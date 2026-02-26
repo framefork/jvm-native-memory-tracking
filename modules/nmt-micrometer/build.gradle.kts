@@ -1,0 +1,20 @@
+plugins {
+    id("framefork.java-public")
+}
+
+dependencies {
+    api(project(":nmt-core"))
+    api(libs.micrometer.core)
+
+    compileOnly(libs.jetbrains.annotations)
+    compileOnly(libs.spring.boot.autoconfigure)
+    annotationProcessor(libs.spring.boot.configuration.processor)
+
+    testImplementation(project(":nmt-testing"))
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.logback.classic)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+project.description = "JVM Native Memory Tracking metrics for Micrometer"
