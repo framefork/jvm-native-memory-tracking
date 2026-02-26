@@ -8,7 +8,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "native-memory-tracking"
+rootProject.name = "jvm-native-memory-tracking"
 
 file("${rootProject.projectDir}/modules").toPath().listDirectoryEntries().forEach { moduleDir ->
     include("${moduleDir.fileName}")

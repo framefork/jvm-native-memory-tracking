@@ -1,4 +1,4 @@
-# Native Memory Tracking
+# JVM Native Memory Tracking
 
 A Java library that collects JVM [Native Memory Tracking (NMT)](https://docs.oracle.com/en/java/javase/17/vm/native-memory-tracking.html) data via `jcmd` and exposes it as metrics through [Micrometer](https://micrometer.io/) and/or [OpenTelemetry](https://opentelemetry.io/).
 
@@ -26,7 +26,7 @@ Pick the module matching your metrics API:
 | OpenTelemetry  | [org.framefork:nmt-opentelemetry](https://central.sonatype.com/artifact/org.framefork/nmt-opentelemetry)                         |
 | Core only      | [org.framefork:nmt-core](https://central.sonatype.com/artifact/org.framefork/nmt-core)                                           |
 
-Find the latest version in this project's [GitHub releases](https://github.com/framefork/native-memory-tracking/releases) or on [Maven Central](https://central.sonatype.com/namespace/org.framefork).
+Find the latest version in this project's [GitHub releases](https://github.com/framefork/jvm-native-memory-tracking/releases) or on [Maven Central](https://central.sonatype.com/namespace/org.framefork).
 
 ### Gradle
 

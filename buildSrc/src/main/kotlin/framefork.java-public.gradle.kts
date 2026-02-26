@@ -27,7 +27,7 @@ publishing {
             from(components["java"])
 
             pom {
-                url = "https://github.com/framefork/native-memory-tracking"
+                url = "https://github.com/framefork/jvm-native-memory-tracking"
                 inceptionYear = "2025"
                 licenses {
                     license {
@@ -47,13 +47,13 @@ publishing {
                     }
                 }
                 scm {
-                    connection = "scm:git:https://github.com/framefork/native-memory-tracking.git"
-                    developerConnection = "scm:git:ssh://github.com/framefork/native-memory-tracking.git"
-                    url = "https://github.com/framefork/native-memory-tracking"
+                    connection = "scm:git:https://github.com/framefork/jvm-native-memory-tracking.git"
+                    developerConnection = "scm:git:ssh://github.com/framefork/jvm-native-memory-tracking.git"
+                    url = "https://github.com/framefork/jvm-native-memory-tracking"
                 }
                 issueManagement {
                     system = "GitHub"
-                    url = "https://github.com/framefork/native-memory-tracking/issues"
+                    url = "https://github.com/framefork/jvm-native-memory-tracking/issues"
                 }
             }
 

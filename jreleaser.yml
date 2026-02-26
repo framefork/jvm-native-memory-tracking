@@ -1,6 +1,6 @@
 project:
   vendor: Framefork
-  name: native-memory-tracking
+  name: jvm-native-memory-tracking
   languages:
     java:
       groupId: "org.framefork"
