@@ -3,7 +3,8 @@ package org.framefork.nmt.core;
 /**
  * Abstraction for running jcmd commands against the current JVM.
  */
-public interface JcmdRunner {
+public interface JcmdRunner
+{
 
     /**
      * Runs a jcmd command with the given arguments against the current JVM process.

@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NmtAvailabilityTest {
+class NmtAvailabilityTest
+{
 
     @Test
-    void getNmtMode_returnsNonNullMode() {
+    void getNmtMode_returnsNonNullMode()
+    {
         var mode = NmtAvailability.getNmtMode();
 
         assertThat(mode).isNotNull();
@@ -15,7 +17,8 @@ class NmtAvailabilityTest {
     }
 
     @Test
-    void isJcmdAvailable_returnsBooleanWithoutThrowing() {
+    void isJcmdAvailable_returnsBooleanWithoutThrowing()
+    {
         var available = NmtAvailability.isJcmdAvailable();
 
         assertThat(available).isIn(true, false);

@@ -15,10 +15,12 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NmtOpenTelemetryManualTest {
+class NmtOpenTelemetryManualTest
+{
 
     @Test
-    void manualWiringRegistersGauges() {
+    void manualWiringRegistersGauges()
+    {
         var reader = InMemoryMetricReader.create();
         var sdkMeterProvider = SdkMeterProvider.builder()
             .registerMetricReader(reader)
@@ -41,7 +43,8 @@ class NmtOpenTelemetryManualTest {
     }
 
     @Test
-    void gaugesContainCategoryAttribute() {
+    void gaugesContainCategoryAttribute()
+    {
         var reader = InMemoryMetricReader.create();
         var sdkMeterProvider = SdkMeterProvider.builder()
             .registerMetricReader(reader)
@@ -68,9 +71,11 @@ class NmtOpenTelemetryManualTest {
         }
     }
 
-    private static JcmdNmtDataCollector createCollector() {
+    private static JcmdNmtDataCollector createCollector()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
         var jcmdRunner = new CannedJcmdRunner(output);
         return new JcmdNmtDataCollector(jcmdRunner);
     }
+
 }

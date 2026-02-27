@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
  * <p>The parser dynamically extracts whatever category names jcmd reports,
  * making it forward-compatible with new JDK versions that may add categories.</p>
  */
-public final class NmtOutputParser {
+public final class NmtOutputParser
+{
 
     private static final Logger log = LoggerFactory.getLogger(NmtOutputParser.class);
 
@@ -42,7 +43,8 @@ public final class NmtOutputParser {
      * @param output the raw text output from {@code jcmd VM.native_memory summary scale=b}
      * @return parsed summary, empty if NMT is not enabled or output is empty
      */
-    public NmtSummary parse(String output) {
+    public NmtSummary parse(String output)
+    {
         if (output == null || output.isBlank()) {
             return new NmtSummary(new LinkedHashMap<>());
         }
@@ -62,8 +64,14 @@ public final class NmtOutputParser {
                 var committed = Long.parseLong(totalMatcher.group("committed"));
                 var normalized = normalizeCategoryName("Total");
                 categories.put(normalized, new NmtCategory("Total", normalized, reserved, committed));
+
             } catch (NumberFormatException e) {
-                log.warn("Failed to parse NMT total line values: {}", e.getMessage());
+                log.warn(
+                    "Failed to parse NMT total line values (reserved='{}', committed='{}'): {}",
+                    totalMatcher.group("reserved"),
+                    totalMatcher.group("committed"),
+                    e.getMessage()
+                );
             }
         }
 
@@ -76,8 +84,15 @@ public final class NmtOutputParser {
                 var committed = Long.parseLong(categoryMatcher.group("committed"));
                 var normalized = normalizeCategoryName(label);
                 categories.put(normalized, new NmtCategory(label, normalized, reserved, committed));
+
             } catch (NumberFormatException e) {
-                log.warn("Failed to parse NMT category values: {}", e.getMessage());
+                log.warn(
+                    "Failed to parse NMT category values (category='{}', reserved='{}', committed='{}'): {}",
+                    categoryMatcher.group("category"),
+                    categoryMatcher.group("reserved"),
+                    categoryMatcher.group("committed"),
+                    e.getMessage()
+                );
             }
         }
 
@@ -93,7 +108,8 @@ public final class NmtOutputParser {
      * Examples: "Java Heap" -> "java_heap", "GCCardSet" -> "gc_card_set",
      * "Native Memory Tracking" -> "native_memory_tracking"
      */
-    static String normalizeCategoryName(String label) {
+    static String normalizeCategoryName(String label)
+    {
         // Insert underscore before uppercase letters that follow lowercase letters (camelCase boundaries)
         var result = label.replaceAll("([a-z])([A-Z])", "$1_$2");
         // Replace spaces with underscores

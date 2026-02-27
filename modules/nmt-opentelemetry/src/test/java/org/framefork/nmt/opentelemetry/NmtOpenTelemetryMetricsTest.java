@@ -15,10 +15,12 @@ import java.util.Collection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-class NmtOpenTelemetryMetricsTest {
+class NmtOpenTelemetryMetricsTest
+{
 
     @Test
-    void constructor_registersCommittedAndReservedGauges() {
+    void constructor_registersCommittedAndReservedGauges()
+    {
         var reader = InMemoryMetricReader.create();
         var sdkMeterProvider = SdkMeterProvider.builder()
             .registerMetricReader(reader)
@@ -42,7 +44,8 @@ class NmtOpenTelemetryMetricsTest {
     }
 
     @Test
-    void constructor_gaugesContainCategoryAttribute() {
+    void constructor_gaugesContainCategoryAttribute()
+    {
         var reader = InMemoryMetricReader.create();
         var sdkMeterProvider = SdkMeterProvider.builder()
             .registerMetricReader(reader)
@@ -73,7 +76,8 @@ class NmtOpenTelemetryMetricsTest {
     }
 
     @Test
-    void close_doesNotThrow() {
+    void close_doesNotThrow()
+    {
         var reader = InMemoryMetricReader.create();
         var sdkMeterProvider = SdkMeterProvider.builder()
             .registerMetricReader(reader)
@@ -87,7 +91,8 @@ class NmtOpenTelemetryMetricsTest {
         assertThatCode(metrics::close).doesNotThrowAnyException();
     }
 
-    private static JcmdNmtDataCollector createCollector() {
+    private static JcmdNmtDataCollector createCollector()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
         var jcmdRunner = new CannedJcmdRunner(output);
         return new JcmdNmtDataCollector(jcmdRunner);

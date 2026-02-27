@@ -8,9 +8,11 @@ import java.util.Objects;
 /**
  * Provides access to sample NMT output files for testing.
  */
-public final class NmtTestResources {
+public final class NmtTestResources
+{
 
-    private NmtTestResources() {
+    private NmtTestResources()
+    {
     }
 
     /**
@@ -19,7 +21,8 @@ public final class NmtTestResources {
      * @param resourceName the resource name (e.g., "nmt-summary-jdk17.txt")
      * @return the file content as a string
      */
-    public static String loadSample(String resourceName) {
+    public static String loadSample(String resourceName)
+    {
         try (var stream = NmtTestResources.class.getResourceAsStream("/nmt-samples/" + resourceName)) {
             Objects.requireNonNull(stream, "Sample resource not found: " + resourceName);
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);

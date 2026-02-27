@@ -8,10 +8,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CachingNmtDataCollectorTest {
+class CachingNmtDataCollectorTest
+{
 
     @Test
-    void collect_withinTtl_returnsCachedValueWithoutCallingDelegate() {
+    void collect_withinTtl_returnsCachedValueWithoutCallingDelegate()
+    {
         var callCount = new AtomicInteger(0);
         NmtDataCollector delegate = () -> {
             callCount.incrementAndGet();
@@ -27,7 +29,8 @@ class CachingNmtDataCollectorTest {
     }
 
     @Test
-    void collect_afterTtlExpires_callsDelegateAgain() throws InterruptedException {
+    void collect_afterTtlExpires_callsDelegateAgain() throws InterruptedException
+    {
         var callCount = new AtomicInteger(0);
         NmtDataCollector delegate = () -> {
             callCount.incrementAndGet();

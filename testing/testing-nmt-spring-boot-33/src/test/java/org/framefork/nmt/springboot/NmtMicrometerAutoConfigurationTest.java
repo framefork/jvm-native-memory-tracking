@@ -11,21 +11,24 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NmtMicrometerAutoConfigurationTest {
+class NmtMicrometerAutoConfigurationTest
+{
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
         .withConfiguration(AutoConfigurations.of(NmtMicrometerAutoConfiguration.class))
         .withBean(MeterRegistry.class, SimpleMeterRegistry::new);
 
     @Test
-    void contextLoads() {
+    void contextLoads()
+    {
         contextRunner.run(context -> {
             assertThat(context).hasNotFailed();
         });
     }
 
     @Test
-    void nmtMeterBinderNotCreatedWhenNmtDisabled() {
+    void nmtMeterBinderNotCreatedWhenNmtDisabled()
+    {
         // NMT is not enabled in the test JVM, so the condition should not match
         contextRunner.run(context -> {
             assertThat(context).doesNotHaveBean(NmtMeterBinder.class);
@@ -33,9 +36,11 @@ class NmtMicrometerAutoConfigurationTest {
     }
 
     @Test
-    void nmtDataCollectorNotCreatedWhenNmtDisabled() {
+    void nmtDataCollectorNotCreatedWhenNmtDisabled()
+    {
         contextRunner.run(context -> {
             assertThat(context).doesNotHaveBean(NmtDataCollector.class);
         });
     }
+
 }

@@ -9,10 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NmtMeterBinderTest {
+class NmtMeterBinderTest
+{
 
     @Test
-    void bindTo_registersCommittedAndReservedGauges() {
+    void bindTo_registersCommittedAndReservedGauges()
+    {
         var registry = new SimpleMeterRegistry();
         var binder = createBinder();
 
@@ -30,7 +32,8 @@ class NmtMeterBinderTest {
     }
 
     @Test
-    void bindTo_gaugeValuesMatchCannedData() {
+    void bindTo_gaugeValuesMatchCannedData()
+    {
         var registry = new SimpleMeterRegistry();
         var binder = createBinder();
 
@@ -53,7 +56,8 @@ class NmtMeterBinderTest {
     }
 
     @Test
-    void bindTo_gaugesHaveCategoryTag() {
+    void bindTo_gaugesHaveCategoryTag()
+    {
         var registry = new SimpleMeterRegistry();
         var binder = createBinder();
 
@@ -68,7 +72,8 @@ class NmtMeterBinderTest {
     }
 
     @Test
-    void bindTo_baseUnitIsBytes() {
+    void bindTo_baseUnitIsBytes()
+    {
         var registry = new SimpleMeterRegistry();
         var binder = createBinder();
 
@@ -83,7 +88,8 @@ class NmtMeterBinderTest {
         assertThat(gauge.getBaseUnit()).isEqualTo("bytes");
     }
 
-    private static NmtMeterBinder createBinder() {
+    private static NmtMeterBinder createBinder()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
         var jcmdRunner = new CannedJcmdRunner(output);
         var collector = new JcmdNmtDataCollector(jcmdRunner);

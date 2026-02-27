@@ -9,7 +9,8 @@ import java.time.Duration;
  * running jcmd too frequently when multiple metric callbacks fire
  * within the same collection cycle.
  */
-public final class CachingNmtDataCollector implements NmtDataCollector {
+public final class CachingNmtDataCollector implements NmtDataCollector
+{
 
     private static final Duration DEFAULT_TTL = Duration.ofSeconds(5);
 
@@ -19,17 +20,20 @@ public final class CachingNmtDataCollector implements NmtDataCollector {
     private volatile @Nullable NmtSummary cachedValue;
     private volatile long cachedAt;
 
-    public CachingNmtDataCollector(NmtDataCollector delegate) {
+    public CachingNmtDataCollector(NmtDataCollector delegate)
+    {
         this(delegate, DEFAULT_TTL);
     }
 
-    public CachingNmtDataCollector(NmtDataCollector delegate, Duration ttl) {
+    public CachingNmtDataCollector(NmtDataCollector delegate, Duration ttl)
+    {
         this.delegate = delegate;
         this.ttlNanos = ttl.toNanos();
     }
 
     @Override
-    public NmtSummary collect() {
+    public NmtSummary collect()
+    {
         var now = System.nanoTime();
         var cached = cachedValue;
         if (cached != null && (now - cachedAt) < ttlNanos) {

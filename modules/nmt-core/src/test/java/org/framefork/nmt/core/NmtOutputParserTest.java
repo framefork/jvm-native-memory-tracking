@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NmtOutputParserTest {
+class NmtOutputParserTest
+{
 
     private final NmtOutputParser parser = new NmtOutputParser();
 
     @Test
-    void parsesSampleOutput_returnsNonEmptySummaryWithExpectedCategories() {
+    void parsesSampleOutput_returnsNonEmptySummaryWithExpectedCategories()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
 
         var summary = parser.parse(output);
@@ -25,7 +27,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesSampleOutput_totalLineHasCorrectValues() {
+    void parsesSampleOutput_totalLineHasCorrectValues()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
 
         var summary = parser.parse(output);
@@ -39,7 +42,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesSampleOutput_categoriesHaveCorrectValues() {
+    void parsesSampleOutput_categoriesHaveCorrectValues()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
 
         var summary = parser.parse(output);
@@ -71,7 +75,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesSampleOutput_allCategoriesParsed() {
+    void parsesSampleOutput_allCategoriesParsed()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
 
         var summary = parser.parse(output);
@@ -81,7 +86,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void normalizeCategoryName_convertsExpectedLabels() {
+    void normalizeCategoryName_convertsExpectedLabels()
+    {
         assertThat(NmtOutputParser.normalizeCategoryName("Java Heap")).isEqualTo("java_heap");
         assertThat(NmtOutputParser.normalizeCategoryName("GCCardSet")).isEqualTo("gccard_set");
         assertThat(NmtOutputParser.normalizeCategoryName("Native Memory Tracking")).isEqualTo("native_memory_tracking");
@@ -95,7 +101,8 @@ class NmtOutputParserTest {
     // --- Minimal output ---
 
     @Test
-    void parsesMinimalOutput_returnsNonEmptySummaryWithTotal() {
+    void parsesMinimalOutput_returnsNonEmptySummaryWithTotal()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-minimal.txt");
 
         var summary = parser.parse(output);
@@ -105,7 +112,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesMinimalOutput_totalHasCorrectValues() {
+    void parsesMinimalOutput_totalHasCorrectValues()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-minimal.txt");
 
         var summary = parser.parse(output);
@@ -117,7 +125,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesMinimalOutput_hasFewCategoriesOnly() {
+    void parsesMinimalOutput_hasFewCategoriesOnly()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-minimal.txt");
 
         var summary = parser.parse(output);
@@ -130,7 +139,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesMinimalOutput_categoriesHaveCorrectValues() {
+    void parsesMinimalOutput_categoriesHaveCorrectValues()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-minimal.txt");
 
         var summary = parser.parse(output);
@@ -154,7 +164,8 @@ class NmtOutputParserTest {
     // --- Future categories ---
 
     @Test
-    void parsesFutureCategoriesOutput_containsAllOriginalCategories() {
+    void parsesFutureCategoriesOutput_containsAllOriginalCategories()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-future-categories.txt");
 
         var summary = parser.parse(output);
@@ -169,7 +180,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesFutureCategoriesOutput_picksUpNewCategories() {
+    void parsesFutureCategoriesOutput_picksUpNewCategories()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-future-categories.txt");
 
         var summary = parser.parse(output);
@@ -198,7 +210,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesFutureCategoriesOutput_allCategoriesParsed() {
+    void parsesFutureCategoriesOutput_allCategoriesParsed()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-future-categories.txt");
 
         var summary = parser.parse(output);
@@ -210,7 +223,8 @@ class NmtOutputParserTest {
     // --- Zero values ---
 
     @Test
-    void parsesZeroValuesOutput_returnsNonEmptySummary() {
+    void parsesZeroValuesOutput_returnsNonEmptySummary()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-zero-values.txt");
 
         var summary = parser.parse(output);
@@ -220,7 +234,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesZeroValuesOutput_zeroCategoriesArePresent() {
+    void parsesZeroValuesOutput_zeroCategoriesArePresent()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-zero-values.txt");
 
         var summary = parser.parse(output);
@@ -248,7 +263,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesZeroValuesOutput_nonZeroCategoriesHaveCorrectValues() {
+    void parsesZeroValuesOutput_nonZeroCategoriesHaveCorrectValues()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-zero-values.txt");
 
         var summary = parser.parse(output);
@@ -265,7 +281,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parsesZeroValuesOutput_allCategoriesParsed() {
+    void parsesZeroValuesOutput_allCategoriesParsed()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-zero-values.txt");
 
         var summary = parser.parse(output);
@@ -277,7 +294,8 @@ class NmtOutputParserTest {
     // --- NMT not enabled (from file) ---
 
     @Test
-    void parse_nmtNotEnabledFromFile_returnsEmptySummary() {
+    void parse_nmtNotEnabledFromFile_returnsEmptySummary()
+    {
         var output = NmtTestResources.loadSample("nmt-not-enabled.txt");
 
         var summary = parser.parse(output);
@@ -289,7 +307,8 @@ class NmtOutputParserTest {
     // --- NMT not enabled (hardcoded) ---
 
     @Test
-    void parse_nmtNotEnabled_returnsEmptySummary() {
+    void parse_nmtNotEnabled_returnsEmptySummary()
+    {
         var output = "Native memory tracking is not enabled";
 
         var summary = parser.parse(output);
@@ -300,7 +319,8 @@ class NmtOutputParserTest {
 
     @SuppressWarnings("NullAway")
     @Test
-    void parse_nullInput_returnsEmptySummary() {
+    void parse_nullInput_returnsEmptySummary()
+    {
         var summary = parser.parse(null);
 
         assertThat(summary.isEmpty()).isTrue();
@@ -308,7 +328,8 @@ class NmtOutputParserTest {
     }
 
     @Test
-    void parse_blankInput_returnsEmptySummary() {
+    void parse_blankInput_returnsEmptySummary()
+    {
         var summary = parser.parse("   ");
 
         assertThat(summary.isEmpty()).isTrue();

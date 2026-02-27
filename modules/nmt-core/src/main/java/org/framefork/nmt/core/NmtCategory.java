@@ -13,5 +13,7 @@ public record NmtCategory(
     String normalizedName,
     long reserved,
     long committed
-) {
+)
+{
+
 }

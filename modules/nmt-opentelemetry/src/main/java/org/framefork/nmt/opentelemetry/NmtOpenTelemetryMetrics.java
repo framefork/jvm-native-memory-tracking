@@ -1,8 +1,8 @@
 package org.framefork.nmt.opentelemetry;
 
 import io.opentelemetry.api.OpenTelemetry;
-import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.common.AttributeKey;
+import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.metrics.ObservableLongGauge;
 import org.framefork.nmt.core.NmtDataCollector;
 import org.slf4j.Logger;
@@ -25,7 +25,8 @@ import java.util.List;
  *
  * <p>Implements {@link AutoCloseable} to deregister gauge callbacks on shutdown.</p>
  */
-public final class NmtOpenTelemetryMetrics implements AutoCloseable {
+public final class NmtOpenTelemetryMetrics implements AutoCloseable
+{
 
     private static final Logger log = LoggerFactory.getLogger(NmtOpenTelemetryMetrics.class);
 
@@ -34,7 +35,8 @@ public final class NmtOpenTelemetryMetrics implements AutoCloseable {
 
     private final List<ObservableLongGauge> gauges = new ArrayList<>();
 
-    public NmtOpenTelemetryMetrics(OpenTelemetry openTelemetry, NmtDataCollector collector) {
+    public NmtOpenTelemetryMetrics(OpenTelemetry openTelemetry, NmtDataCollector collector)
+    {
         var meter = openTelemetry.getMeter(INSTRUMENTATION_SCOPE);
 
         // Do an initial collection to discover categories
@@ -78,7 +80,8 @@ public final class NmtOpenTelemetryMetrics implements AutoCloseable {
     }
 
     @Override
-    public synchronized void close() {
+    public synchronized void close()
+    {
         var unclosed = List.copyOf(gauges);
         gauges.clear();
         for (var gauge : unclosed) {

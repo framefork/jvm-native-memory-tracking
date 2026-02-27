@@ -10,30 +10,35 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NmtOpenTelemetryAutoConfigurationTest {
+class NmtOpenTelemetryAutoConfigurationTest
+{
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
         .withConfiguration(AutoConfigurations.of(NmtOpenTelemetryAutoConfiguration.class))
         .withBean(OpenTelemetry.class, OpenTelemetry::noop);
 
     @Test
-    void contextLoads() {
+    void contextLoads()
+    {
         contextRunner.run(context -> {
             assertThat(context).hasNotFailed();
         });
     }
 
     @Test
-    void nmtOpenTelemetryMetricsNotCreatedWhenNmtDisabled() {
+    void nmtOpenTelemetryMetricsNotCreatedWhenNmtDisabled()
+    {
         contextRunner.run(context -> {
             assertThat(context).doesNotHaveBean(NmtOpenTelemetryMetrics.class);
         });
     }
 
     @Test
-    void nmtDataCollectorNotCreatedWhenNmtDisabled() {
+    void nmtDataCollectorNotCreatedWhenNmtDisabled()
+    {
         contextRunner.run(context -> {
             assertThat(context).doesNotHaveBean(NmtDataCollector.class);
         });
     }
+
 }

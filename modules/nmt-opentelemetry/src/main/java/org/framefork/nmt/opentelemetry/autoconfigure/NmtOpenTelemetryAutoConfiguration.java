@@ -31,24 +31,31 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 @ConditionalOnClass(OpenTelemetry.class)
 @ConditionalOnBean(OpenTelemetry.class)
 @Conditional(NmtOpenTelemetryAutoConfiguration.NmtAvailableCondition.class)
-public class NmtOpenTelemetryAutoConfiguration {
+public class NmtOpenTelemetryAutoConfiguration
+{
 
     @Bean
     @ConditionalOnMissingBean(NmtDataCollector.class)
-    public NmtDataCollector nmtDataCollector() {
+    public NmtDataCollector nmtDataCollector()
+    {
         return new CachingNmtDataCollector(new JcmdNmtDataCollector(new DefaultJcmdRunner()));
     }
 
     @Bean(destroyMethod = "close")
-    public NmtOpenTelemetryMetrics nmtOpenTelemetryMetrics(OpenTelemetry openTelemetry, NmtDataCollector collector) {
+    public NmtOpenTelemetryMetrics nmtOpenTelemetryMetrics(OpenTelemetry openTelemetry, NmtDataCollector collector)
+    {
         return new NmtOpenTelemetryMetrics(openTelemetry, collector);
     }
 
-    static class NmtAvailableCondition implements Condition {
+    static class NmtAvailableCondition implements Condition
+    {
+
         @Override
-        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata)
+        {
             return NmtAvailability.isNmtEnabled() && NmtAvailability.isJcmdAvailable();
         }
+
     }
 
 }

@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit;
  * Default {@link JcmdRunner} that locates the {@code jcmd} executable
  * and runs it as a subprocess against the current JVM.
  */
-public final class DefaultJcmdRunner implements JcmdRunner {
+public final class DefaultJcmdRunner implements JcmdRunner
+{
 
     private static final Logger log = LoggerFactory.getLogger(DefaultJcmdRunner.class);
 
@@ -27,18 +28,21 @@ public final class DefaultJcmdRunner implements JcmdRunner {
     private final long pid;
     private final Duration timeout;
 
-    public DefaultJcmdRunner() {
+    public DefaultJcmdRunner()
+    {
         this(findJcmdPath(), ProcessHandle.current().pid(), Duration.ofSeconds(5));
     }
 
-    public DefaultJcmdRunner(Path jcmdPath, long pid, Duration timeout) {
+    public DefaultJcmdRunner(Path jcmdPath, long pid, Duration timeout)
+    {
         this.jcmdPath = jcmdPath;
         this.pid = pid;
         this.timeout = timeout;
     }
 
     @Override
-    public String run(String... arguments) {
+    public String run(String... arguments)
+    {
         var command = new ArrayList<String>();
         command.add(jcmdPath.toString());
         command.add(String.valueOf(pid));
@@ -85,7 +89,8 @@ public final class DefaultJcmdRunner implements JcmdRunner {
     /**
      * Returns {@code true} if the jcmd executable can be found on this system.
      */
-    public static boolean isJcmdAvailable() {
+    public static boolean isJcmdAvailable()
+    {
         try {
             findJcmdPath();
             return true;
@@ -94,7 +99,8 @@ public final class DefaultJcmdRunner implements JcmdRunner {
         }
     }
 
-    static Path findJcmdPath() {
+    static Path findJcmdPath()
+    {
         // First try $JAVA_HOME/bin/jcmd
         var javaHome = System.getProperty("java.home");
         if (javaHome != null) {

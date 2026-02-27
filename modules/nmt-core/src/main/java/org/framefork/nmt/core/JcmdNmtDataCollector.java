@@ -9,20 +9,23 @@ import java.util.Map;
  * Collects NMT data by running {@code jcmd VM.native_memory summary scale=b}
  * and parsing the output.
  */
-public final class JcmdNmtDataCollector implements NmtDataCollector {
+public final class JcmdNmtDataCollector implements NmtDataCollector
+{
 
     private static final Logger log = LoggerFactory.getLogger(JcmdNmtDataCollector.class);
 
     private final JcmdRunner jcmdRunner;
     private final NmtOutputParser parser;
 
-    public JcmdNmtDataCollector(JcmdRunner jcmdRunner) {
+    public JcmdNmtDataCollector(JcmdRunner jcmdRunner)
+    {
         this.jcmdRunner = jcmdRunner;
         this.parser = new NmtOutputParser();
     }
 
     @Override
-    public NmtSummary collect() {
+    public NmtSummary collect()
+    {
         try {
             var output = jcmdRunner.run("VM.native_memory", "summary", "scale=b");
             return parser.parse(output);

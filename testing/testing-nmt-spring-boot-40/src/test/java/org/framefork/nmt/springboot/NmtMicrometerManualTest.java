@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NmtMicrometerManualTest {
+class NmtMicrometerManualTest
+{
 
     @Test
-    void manualWiringRegistersGauges() {
+    void manualWiringRegistersGauges()
+    {
         var registry = new SimpleMeterRegistry();
         var binder = createBinder();
 
@@ -31,7 +33,8 @@ class NmtMicrometerManualTest {
     }
 
     @Test
-    void gaugeValuesMatchCannedData() {
+    void gaugeValuesMatchCannedData()
+    {
         var registry = new SimpleMeterRegistry();
         var binder = createBinder();
 
@@ -44,7 +47,8 @@ class NmtMicrometerManualTest {
     }
 
     @Test
-    void gaugesHaveCorrectBaseUnit() {
+    void gaugesHaveCorrectBaseUnit()
+    {
         var registry = new SimpleMeterRegistry();
         var binder = createBinder();
 
@@ -59,10 +63,12 @@ class NmtMicrometerManualTest {
         assertThat(gauge.getBaseUnit()).isEqualTo("bytes");
     }
 
-    private static NmtMeterBinder createBinder() {
+    private static NmtMeterBinder createBinder()
+    {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
         var jcmdRunner = new CannedJcmdRunner(output);
         var collector = new JcmdNmtDataCollector(jcmdRunner);
         return new NmtMeterBinder(collector);
     }
+
 }

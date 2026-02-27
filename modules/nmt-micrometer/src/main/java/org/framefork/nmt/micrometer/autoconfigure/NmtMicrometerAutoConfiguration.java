@@ -31,24 +31,31 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 @ConditionalOnClass(MeterRegistry.class)
 @ConditionalOnBean(MeterRegistry.class)
 @Conditional(NmtMicrometerAutoConfiguration.NmtAvailableCondition.class)
-public class NmtMicrometerAutoConfiguration {
+public class NmtMicrometerAutoConfiguration
+{
 
     @Bean
     @ConditionalOnMissingBean(NmtDataCollector.class)
-    public NmtDataCollector nmtDataCollector() {
+    public NmtDataCollector nmtDataCollector()
+    {
         return new CachingNmtDataCollector(new JcmdNmtDataCollector(new DefaultJcmdRunner()));
     }
 
     @Bean
-    public NmtMeterBinder nmtMeterBinder(NmtDataCollector collector) {
+    public NmtMeterBinder nmtMeterBinder(NmtDataCollector collector)
+    {
         return new NmtMeterBinder(collector);
     }
 
-    static class NmtAvailableCondition implements Condition {
+    static class NmtAvailableCondition implements Condition
+    {
+
         @Override
-        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata)
+        {
             return NmtAvailability.isNmtEnabled() && NmtAvailability.isJcmdAvailable();
         }
+
     }
 
 }
