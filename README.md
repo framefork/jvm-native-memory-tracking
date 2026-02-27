@@ -118,7 +118,82 @@ The categories are extracted dynamically from `jcmd` output, so new categories a
 3. Results are cached with a 5-second TTL to avoid spawning `jcmd` too frequently
 4. Metric callbacks read from the cache, which is refreshed on the next collection cycle
 
-For more details, see the [design documentation](docs/).
+### jcmd Output Format
+
+The `jcmd <pid> VM.native_memory summary scale=b` command produces text output like:
+
+```
+Native Memory Tracking:
+
+Total: reserved=1607492304, committed=196489936
+       malloc: 30716624 #15376
+       mmap:   reserved=1576775680, committed=165773312
+
+-                 Java Heap (reserved=104857600, committed=104857600)
+                            (mmap: reserved=104857600, committed=104857600)
+
+-                     Class (reserved=1073862359, committed=317143)
+                            (classes #1093)
+                            ...
+
+-                    Thread (reserved=23194136, committed=1092120)
+                            ...
+```
+
+The parser dynamically extracts category names and values using regex, so it is forward-compatible with new JDK versions that may introduce additional categories.
+
+### NMT Categories
+
+The following categories are typically reported by the JVM (varies by JDK version):
+
+| jcmd label | Metric tag value | Description |
+|---|---|---|
+| `Total` | `total` | Sum of all categories |
+| `Java Heap` | `java_heap` | Heap memory |
+| `Class` | `class` | Class metadata |
+| `Thread` | `thread` | Thread stacks and structures |
+| `Code` | `code` | Generated/compiled code |
+| `GC` | `gc` | Garbage collector data structures |
+| `GCCardSet` | `gccard_set` | G1 card set remembered set |
+| `Compiler` | `compiler` | JIT compiler |
+| `Internal` | `internal` | VM internal use |
+| `Symbol` | `symbol` | String table, symbol table |
+| `Native Memory Tracking` | `native_memory_tracking` | NMT's own overhead |
+| `Shared class space` | `shared_class_space` | CDS archive |
+| `Arena Chunk` | `arena_chunk` | Arena allocations |
+| `Tracing` | `tracing` | Tracing infrastructure |
+| `Logging` | `logging` | Logging infrastructure |
+| `Arguments` | `arguments` | VM arguments |
+| `Module` | `module` | Module system |
+| `Safepoint` | `safepoint` | Safepoint infrastructure |
+| `Synchronization` | `synchronization` | Synchronization primitives |
+| `Metaspace` | `metaspace` | Metaspace memory |
+| `String Deduplication` | `string_deduplication` | G1 string deduplication |
+| `Object Monitors` | `object_monitors` | Object monitors |
+
+Category labels are converted to lowercase snake_case for metric tag/attribute values. New categories added in future JDK versions are picked up automatically.
+
+Reference: [OpenJDK memory types in `allocation.hpp`](https://github.com/openjdk/jdk/blob/0ee196bef199c3d32c1f88b26eb4333a7ea73c10/src/hotspot/share/memory/allocation.hpp#L102)
+
+### Caching
+
+Since multiple metric callbacks fire independently during a single collection cycle (one per category per metric = ~46 calls), `jcmd` should only be called once per interval. The `CachingNmtDataCollector` stores the parsed result with a 5-second TTL. When any metric callback fires, it reads from the cache and only runs `jcmd` if the cache has expired.
+
+### Error Handling
+
+- **Container shutdown (exit code 143):** When the container is shutting down, `jcmd` may return exit code 143 (SIGTERM). This is caught and logged as a warning, and empty values are returned.
+- **jcmd failures:** Other errors are logged and result in empty metrics (zeros) rather than exceptions propagating to the metrics system.
+- **NMT not enabled:** If NMT is not enabled, `jcmd` returns `"Native memory tracking is not enabled"`. The parser handles this gracefully and returns an empty summary.
+
+### Docker and Custom JRE Images
+
+If you're building a custom JRE image with `jlink`, make sure to include the `jdk.jcmd` module:
+
+```
+jlink --add-modules ...,jdk.jcmd --output /opt/jre
+```
+
+Without this module, `jcmd` will not be available and the library will not activate (the Spring Boot auto-configuration checks for `jcmd` availability).
 
 ## License
 
