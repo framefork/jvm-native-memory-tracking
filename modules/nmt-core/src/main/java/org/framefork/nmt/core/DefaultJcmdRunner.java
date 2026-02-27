@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,6 +24,16 @@ public final class DefaultJcmdRunner implements JcmdRunner
 
     private static final int EXIT_CODE_SUCCESS = 0;
     private static final int EXIT_CODE_SIGTERM = 143;
+
+    /**
+     * Environment variables that can cause jcmd to load Java agents (e.g. OTEL)
+     * or apply unexpected JVM options, leading to slow startup or timeouts.
+     */
+    private static final List<String> SANITIZED_ENV_VARS = List.of(
+        "JAVA_TOOL_OPTIONS",
+        "_JAVA_OPTIONS",
+        "JDK_JAVA_OPTIONS"
+    );
 
     private final Path jcmdPath;
     private final long pid;
@@ -51,9 +62,10 @@ public final class DefaultJcmdRunner implements JcmdRunner
         log.debug("Running jcmd command: {}", command);
 
         try {
-            var process = new ProcessBuilder(command)
-                .redirectErrorStream(true)
-                .start();
+            var pb = new ProcessBuilder(command)
+                .redirectErrorStream(true);
+            SANITIZED_ENV_VARS.forEach(pb.environment()::remove);
+            var process = pb.start();
 
             var completed = process.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
             if (!completed) {
