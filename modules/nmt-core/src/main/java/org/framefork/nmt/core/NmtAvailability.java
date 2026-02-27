@@ -15,24 +15,22 @@ public final class NmtAvailability {
 
     /**
      * Returns the NMT mode configured for the current JVM.
-     *
-     * @return "off", "summary", or "detail"
      */
-    public static String getNmtMode() {
+    public static NmtMode getNmtMode() {
         var arguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
         for (var argument : arguments) {
             if (argument.startsWith(NMT_FLAG_PREFIX)) {
-                return argument.substring(NMT_FLAG_PREFIX.length());
+                return NmtMode.fromString(argument.substring(NMT_FLAG_PREFIX.length()));
             }
         }
-        return "off";
+        return NmtMode.OFF;
     }
 
     /**
      * Returns {@code true} if NMT is enabled (summary or detail mode).
      */
     public static boolean isNmtEnabled() {
-        return !"off".equals(getNmtMode());
+        return getNmtMode() != NmtMode.OFF;
     }
 
     /**

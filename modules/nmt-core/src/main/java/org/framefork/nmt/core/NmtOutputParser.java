@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * Parses the text output of {@code jcmd <pid> VM.native_memory summary scale=b}
- * into a {@link NativeMemoryTrackingSummary}.
+ * into a {@link NmtSummary}.
  *
  * <p>The parser dynamically extracts whatever category names jcmd reports,
  * making it forward-compatible with new JDK versions that may add categories.</p>
@@ -42,39 +42,50 @@ public final class NmtOutputParser {
      * @param output the raw text output from {@code jcmd VM.native_memory summary scale=b}
      * @return parsed summary, empty if NMT is not enabled or output is empty
      */
-    public NativeMemoryTrackingSummary parse(String output) {
+    public NmtSummary parse(String output) {
         if (output == null || output.isBlank()) {
-            return new NativeMemoryTrackingSummary(new LinkedHashMap<>());
+            return new NmtSummary(new LinkedHashMap<>());
         }
 
         if (output.contains(NMT_NOT_ENABLED)) {
             log.warn("Native memory tracking is not enabled on this JVM");
-            return new NativeMemoryTrackingSummary(new LinkedHashMap<>());
+            return new NmtSummary(new LinkedHashMap<>());
         }
 
-        var categories = new LinkedHashMap<String, NativeMemoryCategory>();
+        var categories = new LinkedHashMap<String, NmtCategory>();
 
         // Parse total line
         var totalMatcher = TOTAL_PATTERN.matcher(output);
         if (totalMatcher.find()) {
-            var reserved = Long.parseLong(totalMatcher.group("reserved"));
-            var committed = Long.parseLong(totalMatcher.group("committed"));
-            var normalized = normalizeCategoryName("Total");
-            categories.put(normalized, new NativeMemoryCategory("Total", normalized, reserved, committed));
+            try {
+                var reserved = Long.parseLong(totalMatcher.group("reserved"));
+                var committed = Long.parseLong(totalMatcher.group("committed"));
+                var normalized = normalizeCategoryName("Total");
+                categories.put(normalized, new NmtCategory("Total", normalized, reserved, committed));
+            } catch (NumberFormatException e) {
+                log.warn("Failed to parse NMT total line values: {}", e.getMessage());
+            }
         }
 
         // Parse per-category lines
         var categoryMatcher = CATEGORY_PATTERN.matcher(output);
         while (categoryMatcher.find()) {
-            var label = categoryMatcher.group("category").trim();
-            var reserved = Long.parseLong(categoryMatcher.group("reserved"));
-            var committed = Long.parseLong(categoryMatcher.group("committed"));
-            var normalized = normalizeCategoryName(label);
-
-            categories.put(normalized, new NativeMemoryCategory(label, normalized, reserved, committed));
+            try {
+                var label = categoryMatcher.group("category").trim();
+                var reserved = Long.parseLong(categoryMatcher.group("reserved"));
+                var committed = Long.parseLong(categoryMatcher.group("committed"));
+                var normalized = normalizeCategoryName(label);
+                categories.put(normalized, new NmtCategory(label, normalized, reserved, committed));
+            } catch (NumberFormatException e) {
+                log.warn("Failed to parse NMT category values: {}", e.getMessage());
+            }
         }
 
-        return new NativeMemoryTrackingSummary(categories);
+        if (categories.isEmpty()) {
+            log.warn("NMT output was present but no categories could be parsed; the jcmd output format may have changed");
+        }
+
+        return new NmtSummary(categories);
     }
 
     /**

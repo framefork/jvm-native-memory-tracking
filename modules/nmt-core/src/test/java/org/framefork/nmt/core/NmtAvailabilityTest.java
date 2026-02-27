@@ -7,11 +7,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class NmtAvailabilityTest {
 
     @Test
-    void getNmtMode_returnsNonNullString() {
+    void getNmtMode_returnsNonNullMode() {
         var mode = NmtAvailability.getNmtMode();
 
         assertThat(mode).isNotNull();
-        assertThat(mode).isNotBlank();
+        assertThat(mode).isInstanceOf(NmtMode.class);
     }
 
     @Test

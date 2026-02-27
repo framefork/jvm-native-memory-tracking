@@ -20,6 +20,9 @@ public final class DefaultJcmdRunner implements JcmdRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultJcmdRunner.class);
 
+    private static final int EXIT_CODE_SUCCESS = 0;
+    private static final int EXIT_CODE_SIGTERM = 143;
+
     private final Path jcmdPath;
     private final long pid;
     private final Duration timeout;
@@ -54,16 +57,19 @@ public final class DefaultJcmdRunner implements JcmdRunner {
                 throw new JcmdException("jcmd command timed out after " + timeout);
             }
 
-            var output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            String output;
+            try (var inputStream = process.getInputStream()) {
+                output = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
             var exitCode = process.exitValue();
 
-            if (exitCode == 143) {
+            if (exitCode == EXIT_CODE_SIGTERM) {
                 // Container shutdown signal -- not an error
                 log.warn("jcmd exited with code 143 (likely container shutdown)");
                 return "";
             }
 
-            if (exitCode != 0) {
+            if (exitCode != EXIT_CODE_SUCCESS) {
                 throw new JcmdException("jcmd exited with code " + exitCode + ": " + output.trim());
             }
 

@@ -22,13 +22,13 @@ public final class JcmdNmtDataCollector implements NmtDataCollector {
     }
 
     @Override
-    public NativeMemoryTrackingSummary collect() {
+    public NmtSummary collect() {
         try {
             var output = jcmdRunner.run("VM.native_memory", "summary", "scale=b");
             return parser.parse(output);
         } catch (JcmdException e) {
             log.error("Failed to collect NMT data: {}", e.getMessage(), e);
-            return new NativeMemoryTrackingSummary(Map.of());
+            return new NmtSummary(Map.of());
         }
     }
 

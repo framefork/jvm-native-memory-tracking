@@ -15,7 +15,7 @@ class CachingNmtDataCollectorTest {
         var callCount = new AtomicInteger(0);
         NmtDataCollector delegate = () -> {
             callCount.incrementAndGet();
-            return new NativeMemoryTrackingSummary(new LinkedHashMap<>());
+            return new NmtSummary(new LinkedHashMap<>());
         };
 
         var caching = new CachingNmtDataCollector(delegate, Duration.ofSeconds(60));
@@ -31,7 +31,7 @@ class CachingNmtDataCollectorTest {
         var callCount = new AtomicInteger(0);
         NmtDataCollector delegate = () -> {
             callCount.incrementAndGet();
-            return new NativeMemoryTrackingSummary(new LinkedHashMap<>());
+            return new NmtSummary(new LinkedHashMap<>());
         };
 
         var caching = new CachingNmtDataCollector(delegate, Duration.ofMillis(50));

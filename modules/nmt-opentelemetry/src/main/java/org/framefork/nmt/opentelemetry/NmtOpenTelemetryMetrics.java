@@ -40,6 +40,11 @@ public final class NmtOpenTelemetryMetrics implements AutoCloseable {
         // Do an initial collection to discover categories
         var summary = collector.collect();
 
+        if (summary.isEmpty()) {
+            log.warn("NMT data collection returned no categories; no NMT metrics will be registered");
+            return;
+        }
+
         for (var entry : summary.getCategories().entrySet()) {
             var categoryName = entry.getKey();
             var attributes = Attributes.of(CATEGORY_KEY, categoryName);

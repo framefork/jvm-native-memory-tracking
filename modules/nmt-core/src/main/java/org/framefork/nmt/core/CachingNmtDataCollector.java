@@ -16,7 +16,7 @@ public final class CachingNmtDataCollector implements NmtDataCollector {
     private final NmtDataCollector delegate;
     private final long ttlNanos;
 
-    private volatile @Nullable NativeMemoryTrackingSummary cachedValue;
+    private volatile @Nullable NmtSummary cachedValue;
     private volatile long cachedAt;
 
     public CachingNmtDataCollector(NmtDataCollector delegate) {
@@ -29,7 +29,7 @@ public final class CachingNmtDataCollector implements NmtDataCollector {
     }
 
     @Override
-    public NativeMemoryTrackingSummary collect() {
+    public NmtSummary collect() {
         var now = System.nanoTime();
         var cached = cachedValue;
         if (cached != null && (now - cachedAt) < ttlNanos) {

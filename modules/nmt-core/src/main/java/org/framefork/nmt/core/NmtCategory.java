@@ -8,7 +8,7 @@ package org.framefork.nmt.core;
  * @param reserved reserved memory in bytes (virtual address space)
  * @param committed committed memory in bytes (physical/swap memory)
  */
-public record NativeMemoryCategory(
+public record NmtCategory(
     String label,
     String normalizedName,
     long reserved,

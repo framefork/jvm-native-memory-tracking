@@ -7,6 +7,8 @@ import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.binder.BaseUnits;
 import io.micrometer.core.instrument.binder.MeterBinder;
 import org.framefork.nmt.core.NmtDataCollector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link MeterBinder} that registers JVM Native Memory Tracking gauges.
@@ -21,6 +23,8 @@ import org.framefork.nmt.core.NmtDataCollector;
  * (e.g., "java_heap", "gc", "thread", "code", etc.).</p>
  */
 public final class NmtMeterBinder implements MeterBinder {
+
+    private static final Logger log = LoggerFactory.getLogger(NmtMeterBinder.class);
 
     private final NmtDataCollector collector;
     private final Tags extraTags;
@@ -39,6 +43,11 @@ public final class NmtMeterBinder implements MeterBinder {
         // We need to register gauges lazily based on what categories the collector returns.
         // First collection determines the categories.
         var summary = collector.collect();
+
+        if (summary.isEmpty()) {
+            log.warn("NMT data collection returned no categories; no NMT metrics will be registered");
+            return;
+        }
 
         for (var entry : summary.getCategories().entrySet()) {
             var categoryName = entry.getKey();

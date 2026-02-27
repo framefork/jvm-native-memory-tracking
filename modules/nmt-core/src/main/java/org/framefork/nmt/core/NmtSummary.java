@@ -9,25 +9,25 @@ import java.util.Map;
 /**
  * Immutable summary of JVM Native Memory Tracking data, as reported by {@code jcmd VM.native_memory summary}.
  */
-public final class NativeMemoryTrackingSummary {
+public final class NmtSummary {
 
-    private final Map<String, NativeMemoryCategory> categories;
+    private final Map<String, NmtCategory> categories;
 
-    public NativeMemoryTrackingSummary(Map<String, NativeMemoryCategory> categories) {
+    public NmtSummary(Map<String, NmtCategory> categories) {
         this.categories = Collections.unmodifiableMap(new LinkedHashMap<>(categories));
     }
 
     /**
      * Returns all NMT categories, keyed by normalized name (e.g., "java_heap", "gc", "total").
      */
-    public Map<String, NativeMemoryCategory> getCategories() {
+    public Map<String, NmtCategory> getCategories() {
         return categories;
     }
 
     /**
      * Returns a specific category by normalized name, or {@code null} if not present.
      */
-    public @Nullable NativeMemoryCategory getCategory(String normalizedName) {
+    public @Nullable NmtCategory getCategory(String normalizedName) {
         return categories.get(normalizedName);
     }
 
@@ -37,6 +37,6 @@ public final class NativeMemoryTrackingSummary {
 
     @Override
     public String toString() {
-        return "NativeMemoryTrackingSummary{categories=" + categories.keySet() + "}";
+        return "NmtSummary{categories=" + categories.keySet() + "}";
     }
 }
