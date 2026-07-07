@@ -4,11 +4,6 @@ plugins {
     id("org.barfuin.gradle.taskinfo") version ("2.2.0") // ./gradlew tiTree publish
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
 group = "org.framefork"
 version = (properties["version"] as String).trim()
 
@@ -19,11 +14,6 @@ allprojects {
 
 tasks.withType<Wrapper> {
     distributionType = Wrapper.DistributionType.ALL
-}
-
-tasks.register<Delete>("cleanAllPublications") {
-    outputs.upToDateWhen { false }
-    setDelete(rootProject.layout.buildDirectory.dir("staging-deploy"))
 }
 
 allprojects {
