@@ -1,21 +1,18 @@
-import kotlin.io.path.listDirectoryEntries
-
 pluginManagement {
-}
-
-dependencyResolutionManagement {
-    versionCatalogs {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
     }
 }
 
+plugins {
+    id("org.framefork.build") version "0.2.0"
+}
+
+framefork {
+    minJavaVersion = 17
+    jdkVersion = 25
+    jspecifyMode = true
+}
+
 rootProject.name = "jvm-native-memory-tracking"
-
-file("${rootProject.projectDir}/modules").toPath().listDirectoryEntries().forEach { moduleDir ->
-    include("${moduleDir.fileName}")
-    project(":${moduleDir.fileName}").projectDir = moduleDir.toFile()
-}
-
-file("${rootProject.projectDir}/testing").toPath().listDirectoryEntries().forEach { moduleDir ->
-    include("${moduleDir.fileName}")
-    project(":${moduleDir.fileName}").projectDir = moduleDir.toFile()
-}
