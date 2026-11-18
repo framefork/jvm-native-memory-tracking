@@ -8,7 +8,6 @@ dependencies {
 
     implementation(libs.slf4j.api)
 
-    compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.spring.boot.autoconfigure)
     annotationProcessor(libs.spring.boot.configuration.processor)
 

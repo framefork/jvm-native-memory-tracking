@@ -209,7 +209,7 @@ Since multiple metric callbacks fire independently during a single collection cy
 
 ### Error Handling
 
-- **Runner failures:** A failed or timed-out command is logged and results in empty metrics (zeros) rather than exceptions propagating to the metrics system.
+- **Runner and parser failures:** A failed or timed-out command, any exception from a custom `DiagnosticCommandRunner`, and any exception from the parser are logged and result in empty metrics (zeros) rather than exceptions propagating to the metrics system.
 - **Container shutdown (exit code 143):** With the `jcmd` runner, `jcmd` may return exit code 143 (SIGTERM) while the container is shutting down. This is logged as a warning, and empty values are returned.
 - **NMT not enabled:** If NMT is not enabled, the command returns `"Native memory tracking is not enabled"`. The parser handles this and returns an empty summary.
 

@@ -6,7 +6,6 @@ plugins {
 dependencies {
     api(libs.errorprone.annotations)
 
-    compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.spring.boot.autoconfigure)
     annotationProcessor(libs.spring.boot.configuration.processor)
 
@@ -16,7 +15,7 @@ dependencies {
     testFixturesApi(libs.assertj.core)
     testFixturesImplementation(libs.logback.classic)
 
-    testImplementation(testFixtures(project))
+    testImplementation(testFixtures(project(":nmt-core")))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)
     testImplementation(libs.logback.classic)
