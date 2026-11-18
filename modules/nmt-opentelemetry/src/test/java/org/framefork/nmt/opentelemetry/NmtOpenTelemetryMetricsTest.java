@@ -5,8 +5,8 @@ import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.metrics.data.MetricData;
 import io.opentelemetry.sdk.testing.exporter.InMemoryMetricReader;
-import org.framefork.nmt.core.JcmdNmtDataCollector;
-import org.framefork.nmt.testing.CannedJcmdRunner;
+import org.framefork.nmt.core.DiagnosticCommandNmtDataCollector;
+import org.framefork.nmt.testing.CannedDiagnosticCommandRunner;
 import org.framefork.nmt.testing.NmtTestResources;
 import org.junit.jupiter.api.Test;
 
@@ -91,11 +91,11 @@ class NmtOpenTelemetryMetricsTest
         assertThatCode(metrics::close).doesNotThrowAnyException();
     }
 
-    private static JcmdNmtDataCollector createCollector()
+    private static DiagnosticCommandNmtDataCollector createCollector()
     {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
-        var jcmdRunner = new CannedJcmdRunner(output);
-        return new JcmdNmtDataCollector(jcmdRunner);
+        var runner = new CannedDiagnosticCommandRunner(output);
+        return new DiagnosticCommandNmtDataCollector(runner);
     }
 
 }

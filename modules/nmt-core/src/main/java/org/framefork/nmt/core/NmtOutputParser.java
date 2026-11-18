@@ -8,10 +8,10 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * Parses the text output of {@code jcmd <pid> VM.native_memory summary scale=b}
+ * Parses the text output of the {@code VM.native_memory summary scale=b} diagnostic command
  * into a {@link NmtSummary}.
  *
- * <p>The parser dynamically extracts whatever category names jcmd reports,
+ * <p>The parser dynamically extracts whatever category names the JVM reports,
  * making it forward-compatible with new JDK versions that may add categories.</p>
  */
 public final class NmtOutputParser
@@ -38,9 +38,9 @@ public final class NmtOutputParser
     );
 
     /**
-     * Parses jcmd NMT output into a structured summary.
+     * Parses NMT summary output into a structured summary.
      *
-     * @param output the raw text output from {@code jcmd VM.native_memory summary scale=b}
+     * @param output the raw text output of {@code VM.native_memory summary scale=b}
      * @return parsed summary, empty if NMT is not enabled or output is empty
      */
     public NmtSummary parse(String output)
@@ -97,7 +97,7 @@ public final class NmtOutputParser
         }
 
         if (categories.isEmpty()) {
-            log.warn("NMT output was present but no categories could be parsed; the jcmd output format may have changed");
+            log.warn("NMT output was present but no categories could be parsed; the VM.native_memory output format may have changed");
         }
 
         return new NmtSummary(categories);

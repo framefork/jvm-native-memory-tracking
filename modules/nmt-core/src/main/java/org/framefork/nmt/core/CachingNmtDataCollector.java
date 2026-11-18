@@ -6,7 +6,7 @@ import java.time.Duration;
 
 /**
  * Wraps an {@link NmtDataCollector} with time-based caching to avoid
- * running jcmd too frequently when multiple metric callbacks fire
+ * running the diagnostic command too frequently when multiple metric callbacks fire
  * within the same collection cycle.
  */
 public final class CachingNmtDataCollector implements NmtDataCollector

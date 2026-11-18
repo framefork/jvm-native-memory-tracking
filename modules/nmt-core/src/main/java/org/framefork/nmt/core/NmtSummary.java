@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Immutable summary of JVM Native Memory Tracking data, as reported by {@code jcmd VM.native_memory summary}.
+ * Immutable summary of JVM Native Memory Tracking data, as reported by the {@code VM.native_memory summary} diagnostic command.
  */
 public final class NmtSummary
 {

@@ -4,7 +4,7 @@ import java.lang.management.ManagementFactory;
 
 /**
  * Utility to detect whether JVM Native Memory Tracking is enabled
- * and whether jcmd is available on the system.
+ * and which ways of reading its data are available.
  */
 public final class NmtAvailability
 {
@@ -38,11 +38,20 @@ public final class NmtAvailability
     }
 
     /**
+     * Returns {@code true} if the {@code com.sun.management:type=DiagnosticCommand} MBean is registered,
+     * so {@link DiagnosticCommandMBeanRunner} can read NMT data in-process.
+     */
+    public static boolean isDiagnosticCommandAvailable()
+    {
+        return DiagnosticCommandMBeanRunner.isAvailable();
+    }
+
+    /**
      * Returns {@code true} if the jcmd executable can be found on this system.
      */
     public static boolean isJcmdAvailable()
     {
-        return DefaultJcmdRunner.isJcmdAvailable();
+        return JcmdProcessRunner.isJcmdAvailable();
     }
 
 }
