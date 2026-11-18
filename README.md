@@ -105,6 +105,8 @@ Each metric is tagged/attributed with `category` identifying the NMT memory type
 
 The categories are extracted dynamically from the NMT output, so new categories added in future JDK versions will be picked up automatically without library changes.
 
+A category gets its series from the first read that reports it. A failed read at startup, or a category that the JVM reports only later, such as `Logging`, therefore does not leave the category out for the life of the JVM. When a category is missing from a later read, OpenTelemetry records no value for it, and the Micrometer gauge reads 0.
+
 ## Supported Versions
 
 | Spring Boot | Micrometer | OpenTelemetry API | Status |
