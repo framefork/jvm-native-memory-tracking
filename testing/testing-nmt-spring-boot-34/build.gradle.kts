@@ -16,6 +16,8 @@ dependencies {
     testImplementation(testFixtures(project(":nmt-core")))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.opentelemetry:opentelemetry-sdk-testing")
+    // Spring Boot's own metrics and OpenTelemetry auto-configurations, so the tests run the NMT ones next to them
+    testImplementation("org.springframework.boot:spring-boot-actuator-autoconfigure")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
