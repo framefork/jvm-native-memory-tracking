@@ -56,6 +56,6 @@ jobs:
         with:
           name: junit-test-results-jdk${{ matrix.jdk }}
           path: |
-            **/build/test-results/test/TEST-*.xml
+            **/build/test-results/*/TEST-*.xml
           retention-days: 1
           overwrite: true
