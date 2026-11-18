@@ -16,7 +16,7 @@ dependencies {
     testFixturesApi(libs.assertj.core)
     testFixturesImplementation(libs.logback.classic)
 
-    testImplementation(testFixtures(project))
+    testImplementation(testFixtures(project(":nmt-core")))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)
     testImplementation(libs.logback.classic)
