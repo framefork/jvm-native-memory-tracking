@@ -21,4 +21,4 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-project.description = "JVM Native Memory Tracking data collector via jcmd"
+project.description = "JVM Native Memory Tracking data collector"

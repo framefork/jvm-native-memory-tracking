@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Default {@link JcmdRunner} that locates the {@code jcmd} executable
+ * {@link DiagnosticCommandRunner} that locates the {@code jcmd} executable
  * and runs it as a subprocess against the current JVM.
  */
-public final class DefaultJcmdRunner implements JcmdRunner
+public final class JcmdProcessRunner implements DiagnosticCommandRunner
 {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultJcmdRunner.class);
+    private static final Logger log = LoggerFactory.getLogger(JcmdProcessRunner.class);
 
     private static final int EXIT_CODE_SUCCESS = 0;
     private static final int EXIT_CODE_SIGTERM = 143;
@@ -39,12 +39,12 @@ public final class DefaultJcmdRunner implements JcmdRunner
     private final long pid;
     private final Duration timeout;
 
-    public DefaultJcmdRunner()
+    public JcmdProcessRunner()
     {
         this(findJcmdPath(), ProcessHandle.current().pid(), Duration.ofSeconds(5));
     }
 
-    public DefaultJcmdRunner(Path jcmdPath, long pid, Duration timeout)
+    public JcmdProcessRunner(Path jcmdPath, long pid, Duration timeout)
     {
         this.jcmdPath = jcmdPath;
         this.pid = pid;
@@ -70,7 +70,7 @@ public final class DefaultJcmdRunner implements JcmdRunner
             var completed = process.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
             if (!completed) {
                 process.destroyForcibly();
-                throw new JcmdException("jcmd command timed out after " + timeout);
+                throw new DiagnosticCommandException("jcmd command timed out after " + timeout);
             }
 
             String output;
@@ -86,15 +86,15 @@ public final class DefaultJcmdRunner implements JcmdRunner
             }
 
             if (exitCode != EXIT_CODE_SUCCESS) {
-                throw new JcmdException("jcmd exited with code " + exitCode + ": " + output.trim());
+                throw new DiagnosticCommandException("jcmd exited with code " + exitCode + ": " + output.trim());
             }
 
             return output;
         } catch (IOException e) {
-            throw new JcmdException("Failed to execute jcmd", e);
+            throw new DiagnosticCommandException("Failed to execute jcmd", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new JcmdException("jcmd execution interrupted", e);
+            throw new DiagnosticCommandException("jcmd execution interrupted", e);
         }
     }
 
@@ -106,7 +106,7 @@ public final class DefaultJcmdRunner implements JcmdRunner
         try {
             findJcmdPath();
             return true;
-        } catch (JcmdException e) {
+        } catch (DiagnosticCommandException e) {
             return false;
         }
     }
@@ -133,7 +133,7 @@ public final class DefaultJcmdRunner implements JcmdRunner
             }
         }
 
-        throw new JcmdException("jcmd executable not found in $JAVA_HOME/bin or $PATH");
+        throw new DiagnosticCommandException("jcmd executable not found in $JAVA_HOME/bin or $PATH");
     }
 
 }

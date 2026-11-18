@@ -62,7 +62,7 @@ No additional configuration is needed. Just add the dependency and the NMT flag.
 
 ```java
 var collector = new CachingNmtDataCollector(
-    new JcmdNmtDataCollector(new DefaultJcmdRunner())
+    new DiagnosticCommandNmtDataCollector(new JcmdProcessRunner())
 );
 var binder = new NmtMeterBinder(collector);
 binder.bindTo(meterRegistry);
@@ -72,7 +72,7 @@ binder.bindTo(meterRegistry);
 
 ```java
 var collector = new CachingNmtDataCollector(
-    new JcmdNmtDataCollector(new DefaultJcmdRunner())
+    new DiagnosticCommandNmtDataCollector(new JcmdProcessRunner())
 );
 var metrics = new NmtOpenTelemetryMetrics(openTelemetry, collector);
 
@@ -146,7 +146,7 @@ The parser dynamically extracts category names and values using regex, so it is 
 
 The following categories are typically reported by the JVM (varies by JDK version):
 
-| jcmd label | Metric tag value | Description |
+| NMT label  | Metric tag value | Description |
 |---|---|---|
 | `Total` | `total` | Sum of all categories |
 | `Java Heap` | `java_heap` | Heap memory |

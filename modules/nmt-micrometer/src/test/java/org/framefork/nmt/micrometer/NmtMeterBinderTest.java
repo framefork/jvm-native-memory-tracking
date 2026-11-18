@@ -2,8 +2,8 @@ package org.framefork.nmt.micrometer;
 
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.framefork.nmt.core.JcmdNmtDataCollector;
-import org.framefork.nmt.testing.CannedJcmdRunner;
+import org.framefork.nmt.core.DiagnosticCommandNmtDataCollector;
+import org.framefork.nmt.testing.CannedDiagnosticCommandRunner;
 import org.framefork.nmt.testing.NmtTestResources;
 import org.junit.jupiter.api.Test;
 
@@ -91,8 +91,8 @@ class NmtMeterBinderTest
     private static NmtMeterBinder createBinder()
     {
         var output = NmtTestResources.loadSample("nmt-summary-jdk17.txt");
-        var jcmdRunner = new CannedJcmdRunner(output);
-        var collector = new JcmdNmtDataCollector(jcmdRunner);
+        var runner = new CannedDiagnosticCommandRunner(output);
+        var collector = new DiagnosticCommandNmtDataCollector(runner);
         return new NmtMeterBinder(collector);
     }
 

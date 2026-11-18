@@ -2,8 +2,8 @@ package org.framefork.nmt.micrometer.autoconfigure;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.framefork.nmt.core.CachingNmtDataCollector;
-import org.framefork.nmt.core.DefaultJcmdRunner;
-import org.framefork.nmt.core.JcmdNmtDataCollector;
+import org.framefork.nmt.core.JcmdProcessRunner;
+import org.framefork.nmt.core.DiagnosticCommandNmtDataCollector;
 import org.framefork.nmt.core.NmtAvailability;
 import org.framefork.nmt.core.NmtDataCollector;
 import org.framefork.nmt.micrometer.NmtMeterBinder;
@@ -38,7 +38,7 @@ public class NmtMicrometerAutoConfiguration
     @ConditionalOnMissingBean(NmtDataCollector.class)
     public NmtDataCollector nmtDataCollector()
     {
-        return new CachingNmtDataCollector(new JcmdNmtDataCollector(new DefaultJcmdRunner()));
+        return new CachingNmtDataCollector(new DiagnosticCommandNmtDataCollector(new JcmdProcessRunner()));
     }
 
     @Bean

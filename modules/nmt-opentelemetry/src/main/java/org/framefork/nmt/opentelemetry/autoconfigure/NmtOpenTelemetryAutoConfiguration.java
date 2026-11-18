@@ -2,8 +2,8 @@ package org.framefork.nmt.opentelemetry.autoconfigure;
 
 import io.opentelemetry.api.OpenTelemetry;
 import org.framefork.nmt.core.CachingNmtDataCollector;
-import org.framefork.nmt.core.DefaultJcmdRunner;
-import org.framefork.nmt.core.JcmdNmtDataCollector;
+import org.framefork.nmt.core.JcmdProcessRunner;
+import org.framefork.nmt.core.DiagnosticCommandNmtDataCollector;
 import org.framefork.nmt.core.NmtAvailability;
 import org.framefork.nmt.core.NmtDataCollector;
 import org.framefork.nmt.opentelemetry.NmtOpenTelemetryMetrics;
@@ -38,7 +38,7 @@ public class NmtOpenTelemetryAutoConfiguration
     @ConditionalOnMissingBean(NmtDataCollector.class)
     public NmtDataCollector nmtDataCollector()
     {
-        return new CachingNmtDataCollector(new JcmdNmtDataCollector(new DefaultJcmdRunner()));
+        return new CachingNmtDataCollector(new DiagnosticCommandNmtDataCollector(new JcmdProcessRunner()));
     }
 
     @Bean(destroyMethod = "close")

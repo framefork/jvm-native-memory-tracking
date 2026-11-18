@@ -42,7 +42,7 @@ public final class NmtAvailability
      */
     public static boolean isJcmdAvailable()
     {
-        return DefaultJcmdRunner.isJcmdAvailable();
+        return JcmdProcessRunner.isJcmdAvailable();
     }
 
 }
