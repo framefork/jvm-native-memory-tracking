@@ -2,6 +2,7 @@ package org.framefork.nmt.springboot;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.testing.exporter.InMemoryMetricReader;
 import org.framefork.nmt.core.autoconfigure.NmtCoreAutoConfiguration;
@@ -43,27 +44,31 @@ class NmtNextToSpringBootAutoConfigurationNmtOnTest
         .withUserConfiguration(InMemoryMetricReaderConfiguration.class);
 
     @Test
-    void springBootMeterRegistryGetsNoNmtMetrics()
+    void exportsNmtThroughSpringBootMeterRegistry()
     {
-        // The NMT auto-configuration runs before Spring Boot's, so its @ConditionalOnBean does not see the MeterRegistry yet.
         contextRunner.run(context -> {
             assertThat(context).hasNotFailed();
             assertThat(context).hasSingleBean(MeterRegistry.class);
-            assertThat(context).doesNotHaveBean(NmtMeterBinder.class);
-            assertThat(context.getBean(MeterRegistry.class).find("jvm.memory.nmt.committed").gauges()).isEmpty();
+            assertThat(context).hasSingleBean(NmtMeterBinder.class);
+            var javaHeapCommitted = context.getBean(MeterRegistry.class).get("jvm.memory.nmt.committed").tag("category", "java_heap").gauge();
+            assertThat(javaHeapCommitted.value()).isPositive();
         });
     }
 
     @Test
-    void springBootOpenTelemetryGetsNoNmtMetrics()
+    void exportsNmtThroughSpringBootOpenTelemetry()
     {
-        // The NMT auto-configuration runs before Spring Boot's, so its @ConditionalOnBean does not see the OpenTelemetry yet.
         contextRunner.run(context -> {
             assertThat(context).hasNotFailed();
             assertThat(context).hasSingleBean(OpenTelemetry.class);
-            assertThat(context).doesNotHaveBean(NmtOpenTelemetryMetrics.class);
-            assertThat(context.getBean(InMemoryMetricReader.class).collectAllMetrics())
-                .noneMatch(metric -> metric.getName().startsWith("jvm.memory.nmt."));
+            assertThat(context).hasSingleBean(NmtOpenTelemetryMetrics.class);
+            var javaHeapCommitted = context.getBean(InMemoryMetricReader.class).collectAllMetrics().stream()
+                .filter(metric -> metric.getName().equals("jvm.memory.nmt.committed"))
+                .flatMap(metric -> metric.getLongGaugeData().getPoints().stream())
+                .filter(point -> "java_heap".equals(point.getAttributes().get(AttributeKey.stringKey("category"))))
+                .findFirst()
+                .orElseThrow();
+            assertThat(javaHeapCommitted.getValue()).isPositive();
         });
     }
 

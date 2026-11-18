@@ -19,8 +19,21 @@ import org.springframework.context.annotation.Bean;
  *   <li>An {@link NmtDataCollector} bean exists, which {@link NmtCoreAutoConfiguration} creates when
  *   Native Memory Tracking is enabled and NMT data can be read</li>
  * </ul>
+ *
+ * <p>It runs after Spring Boot's metrics auto-configurations, so that {@code @ConditionalOnBean} sees the {@link MeterRegistry} they create.
+ * Spring Boot 4 moved them to another package, so both names are listed. A name that is not on the classpath is ignored.</p>
  */
-@AutoConfiguration(after = NmtCoreAutoConfiguration.class)
+@AutoConfiguration(
+    after = NmtCoreAutoConfiguration.class,
+    afterName = {
+        // Spring Boot 3.x
+        "org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration",
+        "org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration",
+        // Spring Boot 4.0
+        "org.springframework.boot.micrometer.metrics.autoconfigure.MetricsAutoConfiguration",
+        "org.springframework.boot.micrometer.metrics.autoconfigure.CompositeMeterRegistryAutoConfiguration",
+    }
+)
 @ConditionalOnClass(MeterRegistry.class)
 @ConditionalOnBean({MeterRegistry.class, NmtDataCollector.class})
 public class NmtMicrometerAutoConfiguration
