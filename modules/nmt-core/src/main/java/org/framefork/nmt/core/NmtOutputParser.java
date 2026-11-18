@@ -105,7 +105,7 @@ public final class NmtOutputParser
 
     /**
      * Normalizes a category label to snake_case.
-     * Examples: "Java Heap" -> "java_heap", "GCCardSet" -> "gc_card_set",
+     * Examples: "Java Heap" -> "java_heap", "GCCardSet" -> "gccard_set",
      * "Native Memory Tracking" -> "native_memory_tracking"
      */
     static String normalizeCategoryName(String label)
