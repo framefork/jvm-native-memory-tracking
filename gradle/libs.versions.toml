@@ -12,7 +12,6 @@ springBoot-v40 = "4.0.3"
 slf4j = "2.0.16"
 
 [libraries]
-jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2" }
 errorprone-annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorProne" }
 autoService-processor = { group = "com.google.auto.service", name = "auto-service", version.ref = "googleAutoService" }
 autoService-annotations = { group = "com.google.auto.service", name = "auto-service-annotations", version.ref = "googleAutoService" }
