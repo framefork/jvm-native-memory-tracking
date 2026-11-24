@@ -62,9 +62,9 @@ public class NmtCoreAutoConfiguration
 
     @Bean
     @ConditionalOnMissingBean(NmtDataCollector.class)
-    public NmtDataCollector nmtDataCollector(DiagnosticCommandRunner nmtDiagnosticCommandRunner)
+    public NmtDataCollector nmtDataCollector(DiagnosticCommandRunner nmtDiagnosticCommandRunner, NmtProperties properties)
     {
-        return new CachingNmtDataCollector(new DiagnosticCommandNmtDataCollector(nmtDiagnosticCommandRunner));
+        return new CachingNmtDataCollector(new DiagnosticCommandNmtDataCollector(nmtDiagnosticCommandRunner), properties.getCacheTtl());
     }
 
     /**

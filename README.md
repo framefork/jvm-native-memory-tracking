@@ -59,10 +59,11 @@ No additional configuration is needed. Just add the dependency and the NMT flag.
 
 ### Configuration
 
-| Property                | Default | Values                  | Description                                                                                                                                               |
-|-------------------------|---------|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `framefork.nmt.enabled` | `true`  | `true`, `false`         | Whether to register the NMT metrics. With `false`, the library registers no beans and logs nothing, even when the application defines its own `NmtDataCollector`. |
-| `framefork.nmt.runner`  | `auto`  | `auto`, `mbean`, `jcmd` | How the NMT data is read. `mbean` calls the DiagnosticCommand MBean in-process, `jcmd` runs the `jcmd` executable as a subprocess. `auto` uses the MBean when it is registered, and `jcmd` otherwise. |
+| Property                  | Default | Values                              | Description                                                                                                                                               |
+|---------------------------|---------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `framefork.nmt.enabled`   | `true`  | `true`, `false`                     | Whether to register the NMT metrics. With `false`, the library registers no beans and logs nothing, even when the application defines its own `NmtDataCollector`. |
+| `framefork.nmt.runner`    | `auto`  | `auto`, `mbean`, `jcmd`             | How the NMT data is read. `mbean` calls the DiagnosticCommand MBean in-process, `jcmd` runs the `jcmd` executable as a subprocess. `auto` uses the MBean when it is registered, and `jcmd` otherwise. |
+| `framefork.nmt.cache-ttl` | `5s`    | a `Duration`, such as `10s` or `1m` | How long a read of the NMT data is reused before the diagnostic command runs again. Must be positive: with `0s` or a negative value, the application fails to start. |
 
 If NMT is enabled but the selected runner is not available, the auto-configuration logs a warning and does not register any metrics. The application still starts.
 
@@ -131,7 +132,7 @@ A category gets its series from the first read that reports it. A failed read at
 
 1. The library runs the `VM.native_memory summary scale=b` diagnostic command against its own JVM
 2. The text output is parsed with regex into structured data (category name, reserved bytes, committed bytes)
-3. Results are cached with a 5-second TTL to avoid running the command too frequently
+3. Results are cached with a TTL, 5 seconds by default (`framefork.nmt.cache-ttl`), to avoid running the command too frequently
 4. Metric callbacks read from the cache, which is refreshed on the next collection cycle
 
 ### Runners
@@ -207,7 +208,7 @@ Reference: [OpenJDK memory types in `allocation.hpp`](https://github.com/openjdk
 
 ### Caching
 
-Since multiple metric callbacks fire independently during a single collection cycle (one per category per metric = ~46 calls), the diagnostic command should only run once per interval. The `CachingNmtDataCollector` stores the parsed result with a 5-second TTL. When any metric callback fires, it reads from the cache and only runs the command if the cache has expired.
+Since multiple metric callbacks fire independently during a single collection cycle (one per category per metric = ~46 calls), the diagnostic command should only run once per interval. The `CachingNmtDataCollector` stores the parsed result with a TTL of 5 seconds, which the `framefork.nmt.cache-ttl` property changes in Spring Boot. The TTL must be positive, because without the cache one scrape would run the command once per callback, and the categories of one scrape would come from different reads. When any metric callback fires, it reads from the cache and only runs the command if the cache has expired.
 
 ### Error Handling
 

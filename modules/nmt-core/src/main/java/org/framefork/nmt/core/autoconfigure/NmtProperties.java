@@ -2,6 +2,8 @@ package org.framefork.nmt.core.autoconfigure;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.time.Duration;
+
 /**
  * Configuration of the JVM Native Memory Tracking metrics.
  */
@@ -21,6 +23,11 @@ public class NmtProperties
      */
     private Runner runner = Runner.AUTO;
 
+    /**
+     * How long a read of the NMT data is reused before the diagnostic command runs again. Must be positive.
+     */
+    private Duration cacheTtl = Duration.ofSeconds(5);
+
     public boolean isEnabled()
     {
         return enabled;
@@ -39,6 +46,16 @@ public class NmtProperties
     public void setRunner(Runner runner)
     {
         this.runner = runner;
+    }
+
+    public Duration getCacheTtl()
+    {
+        return cacheTtl;
+    }
+
+    public void setCacheTtl(Duration cacheTtl)
+    {
+        this.cacheTtl = cacheTtl;
     }
 
     public enum Runner
