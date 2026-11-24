@@ -12,9 +12,24 @@ public class NmtProperties
     public static final String PREFIX = "framefork.nmt";
 
     /**
+     * Whether to register the NMT metrics. When false, the library registers no beans.
+     */
+    private boolean enabled = true;
+
+    /**
      * How the NMT data is read. AUTO uses the DiagnosticCommand MBean when it is registered, and the jcmd executable otherwise.
      */
     private Runner runner = Runner.AUTO;
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
 
     public Runner getRunner()
     {

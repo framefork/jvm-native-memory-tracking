@@ -3,11 +3,13 @@ package org.framefork.nmt.opentelemetry.autoconfigure;
 import io.opentelemetry.api.OpenTelemetry;
 import org.framefork.nmt.core.NmtDataCollector;
 import org.framefork.nmt.core.autoconfigure.NmtCoreAutoConfiguration;
+import org.framefork.nmt.core.autoconfigure.NmtProperties;
 import org.framefork.nmt.opentelemetry.NmtOpenTelemetryMetrics;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -15,6 +17,7 @@ import org.springframework.context.annotation.Bean;
  *
  * <p>Activates when:</p>
  * <ul>
+ *   <li>{@code framefork.nmt.enabled} is not {@code false}</li>
  *   <li>OpenTelemetry's {@link OpenTelemetry} is on the classpath and available as a bean</li>
  *   <li>An {@link NmtDataCollector} bean exists, which {@link NmtCoreAutoConfiguration} creates when
  *   Native Memory Tracking is enabled and NMT data can be read</li>
@@ -32,6 +35,7 @@ import org.springframework.context.annotation.Bean;
         "org.springframework.boot.opentelemetry.autoconfigure.OpenTelemetrySdkAutoConfiguration",
     }
 )
+@ConditionalOnProperty(prefix = NmtProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @ConditionalOnClass(OpenTelemetry.class)
 @ConditionalOnBean({OpenTelemetry.class, NmtDataCollector.class})
 public class NmtOpenTelemetryAutoConfiguration

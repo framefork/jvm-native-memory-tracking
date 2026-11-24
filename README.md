@@ -53,14 +53,16 @@ Both `nmt-micrometer` and `nmt-opentelemetry` include Spring Boot auto-configura
 - The corresponding metrics API is on the classpath (`MeterRegistry` or `OpenTelemetry` bean)
 - NMT is enabled on the JVM (`-XX:NativeMemoryTracking=summary`)
 - The runner selected by `framefork.nmt.runner` is available
+- `framefork.nmt.enabled` is not `false`
 
 No additional configuration is needed. Just add the dependency and the NMT flag.
 
 ### Configuration
 
-| Property               | Default | Values                  | Description                                                                                                                                               |
-|------------------------|---------|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `framefork.nmt.runner` | `auto`  | `auto`, `mbean`, `jcmd` | How the NMT data is read. `mbean` calls the DiagnosticCommand MBean in-process, `jcmd` runs the `jcmd` executable as a subprocess. `auto` uses the MBean when it is registered, and `jcmd` otherwise. |
+| Property                | Default | Values                  | Description                                                                                                                                               |
+|-------------------------|---------|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `framefork.nmt.enabled` | `true`  | `true`, `false`         | Whether to register the NMT metrics. With `false`, the library registers no beans and logs nothing, even when the application defines its own `NmtDataCollector`. |
+| `framefork.nmt.runner`  | `auto`  | `auto`, `mbean`, `jcmd` | How the NMT data is read. `mbean` calls the DiagnosticCommand MBean in-process, `jcmd` runs the `jcmd` executable as a subprocess. `auto` uses the MBean when it is registered, and `jcmd` otherwise. |
 
 If NMT is enabled but the selected runner is not available, the auto-configuration logs a warning and does not register any metrics. The application still starts.
 

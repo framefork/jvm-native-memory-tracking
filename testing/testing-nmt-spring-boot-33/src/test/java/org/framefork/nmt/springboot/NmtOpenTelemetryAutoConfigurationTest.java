@@ -3,12 +3,15 @@ package org.framefork.nmt.springboot;
 import io.opentelemetry.api.OpenTelemetry;
 import org.framefork.nmt.core.DiagnosticCommandRunner;
 import org.framefork.nmt.core.NmtDataCollector;
+import org.framefork.nmt.core.NmtSummary;
 import org.framefork.nmt.core.autoconfigure.NmtCoreAutoConfiguration;
 import org.framefork.nmt.opentelemetry.NmtOpenTelemetryMetrics;
 import org.framefork.nmt.opentelemetry.autoconfigure.NmtOpenTelemetryAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,6 +53,23 @@ class NmtOpenTelemetryAutoConfigurationTest
         contextRunner.withPropertyValues("framefork.nmt.runner=jcmd").run(context -> {
             assertThat(context).hasNotFailed();
             assertThat(context).doesNotHaveBean(NmtDataCollector.class);
+        });
+    }
+
+    @Test
+    void applicationCollectorGetsMetricsWhenJvmNmtOff()
+    {
+        contextRunner.withBean(NmtDataCollector.class, () -> () -> new NmtSummary(Map.of())).run(context -> {
+            assertThat(context).hasSingleBean(NmtOpenTelemetryMetrics.class);
+        });
+    }
+
+    @Test
+    void applicationCollectorGetsNoMetricsWhenSwitchedOff()
+    {
+        contextRunner.withBean(NmtDataCollector.class, () -> () -> new NmtSummary(Map.of())).withPropertyValues("framefork.nmt.enabled=false").run(context -> {
+            assertThat(context).hasNotFailed();
+            assertThat(context).doesNotHaveBean(NmtOpenTelemetryMetrics.class);
         });
     }
 

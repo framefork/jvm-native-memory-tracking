@@ -16,6 +16,7 @@ import org.framefork.nmt.core.NmtDataCollector;
 import org.framefork.nmt.core.NmtMode;
 import org.framefork.nmt.core.NmtSummary;
 import org.framefork.nmt.core.autoconfigure.NmtCoreAutoConfiguration;
+import org.framefork.nmt.core.autoconfigure.NmtProperties;
 import org.framefork.nmt.micrometer.NmtMeterBinder;
 import org.framefork.nmt.micrometer.autoconfigure.NmtMicrometerAutoConfiguration;
 import org.framefork.nmt.opentelemetry.NmtOpenTelemetryMetrics;
@@ -118,6 +119,19 @@ class NmtAutoConfigurationNmtOnTest
                 .findFirst()
                 .orElseThrow();
             assertThat(committed.getValue()).isPositive();
+        });
+    }
+
+    @Test
+    void registersNothingWhenDisabled()
+    {
+        contextRunner.withBean(OpenTelemetry.class, OpenTelemetry::noop).withPropertyValues("framefork.nmt.enabled=false").run(context -> {
+            assertThat(context).hasNotFailed();
+            assertThat(context).doesNotHaveBean(NmtProperties.class);
+            assertThat(context).doesNotHaveBean(DiagnosticCommandRunner.class);
+            assertThat(context).doesNotHaveBean(NmtDataCollector.class);
+            assertThat(context).doesNotHaveBean(NmtMeterBinder.class);
+            assertThat(context).doesNotHaveBean(NmtOpenTelemetryMetrics.class);
         });
     }
 

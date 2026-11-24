@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -26,6 +27,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  *
  * <p>Activates when:</p>
  * <ul>
+ *   <li>{@code framefork.nmt.enabled} is not {@code false}</li>
  *   <li>JVM was started with {@code -XX:NativeMemoryTracking=summary} (or detail)</li>
  *   <li>the runner selected by {@code framefork.nmt.runner} is available: the DiagnosticCommand MBean for {@code mbean},
  *   the {@code jcmd} executable for {@code jcmd}, either of them for {@code auto}</li>
@@ -34,6 +36,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * <p>Both the {@link DiagnosticCommandRunner} and the {@link NmtDataCollector} back off when the application defines its own bean.</p>
  */
 @AutoConfiguration
+@ConditionalOnProperty(prefix = NmtProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @Conditional(NmtCoreAutoConfiguration.NmtAvailableCondition.class)
 @EnableConfigurationProperties(NmtProperties.class)
 public class NmtCoreAutoConfiguration
