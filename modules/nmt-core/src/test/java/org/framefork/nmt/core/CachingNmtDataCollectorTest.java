@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CachingNmtDataCollectorTest
 {
@@ -46,6 +47,36 @@ class CachingNmtDataCollectorTest
 
         caching.collect();
         assertThat(callCount.get()).isEqualTo(2);
+    }
+
+    @Test
+    void constructor_nullTtl_throws()
+    {
+        NmtDataCollector delegate = () -> new NmtSummary(new LinkedHashMap<>());
+
+        assertThatThrownBy(() -> new CachingNmtDataCollector(delegate, null))
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("ttl");
+    }
+
+    @Test
+    void constructor_zeroTtl_throws()
+    {
+        NmtDataCollector delegate = () -> new NmtSummary(new LinkedHashMap<>());
+
+        assertThatThrownBy(() -> new CachingNmtDataCollector(delegate, Duration.ZERO))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("The cache TTL must be positive, got PT0S");
+    }
+
+    @Test
+    void constructor_negativeTtl_throws()
+    {
+        NmtDataCollector delegate = () -> new NmtSummary(new LinkedHashMap<>());
+
+        assertThatThrownBy(() -> new CachingNmtDataCollector(delegate, Duration.ofSeconds(-1)))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("The cache TTL must be positive, got PT-1S");
     }
 
 }
