@@ -8,6 +8,7 @@ import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.metrics.data.MetricData;
 import io.opentelemetry.sdk.testing.exporter.InMemoryMetricReader;
+import org.framefork.nmt.core.CachingNmtDataCollector;
 import org.framefork.nmt.core.JcmdProcessRunner;
 import org.framefork.nmt.core.DiagnosticCommandMBeanRunner;
 import org.framefork.nmt.core.DiagnosticCommandRunner;
@@ -16,6 +17,7 @@ import org.framefork.nmt.core.NmtDataCollector;
 import org.framefork.nmt.core.NmtMode;
 import org.framefork.nmt.core.NmtSummary;
 import org.framefork.nmt.core.autoconfigure.NmtCoreAutoConfiguration;
+import org.framefork.nmt.core.autoconfigure.NmtProperties;
 import org.framefork.nmt.micrometer.NmtMeterBinder;
 import org.framefork.nmt.micrometer.autoconfigure.NmtMicrometerAutoConfiguration;
 import org.framefork.nmt.opentelemetry.NmtOpenTelemetryMetrics;
@@ -29,6 +31,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ApplicationContext;
 
+import java.time.Duration;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -118,6 +121,48 @@ class NmtAutoConfigurationNmtOnTest
                 .findFirst()
                 .orElseThrow();
             assertThat(committed.getValue()).isPositive();
+        });
+    }
+
+    @Test
+    void registersNothingWhenDisabled()
+    {
+        contextRunner.withBean(OpenTelemetry.class, OpenTelemetry::noop).withPropertyValues("framefork.nmt.enabled=false").run(context -> {
+            assertThat(context).hasNotFailed();
+            assertThat(context).doesNotHaveBean(NmtProperties.class);
+            assertThat(context).doesNotHaveBean(DiagnosticCommandRunner.class);
+            assertThat(context).doesNotHaveBean(NmtDataCollector.class);
+            assertThat(context).doesNotHaveBean(NmtMeterBinder.class);
+            assertThat(context).doesNotHaveBean(NmtOpenTelemetryMetrics.class);
+        });
+    }
+
+    @Test
+    void cachesNmtDataForFiveSecondsByDefault()
+    {
+        contextRunner.run(context -> {
+            assertThat(context).getBean(NmtDataCollector.class).isInstanceOf(CachingNmtDataCollector.class)
+                .extracting("ttlNanos").isEqualTo(Duration.ofSeconds(5).toNanos());
+        });
+    }
+
+    @Test
+    void cachesNmtDataForTheConfiguredTtl()
+    {
+        contextRunner.withPropertyValues("framefork.nmt.cache-ttl=30s").run(context -> {
+            assertThat(context).getBean(NmtDataCollector.class).isInstanceOf(CachingNmtDataCollector.class)
+                .extracting("ttlNanos").isEqualTo(Duration.ofSeconds(30).toNanos());
+        });
+    }
+
+    @Test
+    void failsToStartWithZeroCacheTtl()
+    {
+        contextRunner.withPropertyValues("framefork.nmt.cache-ttl=0s").run(context -> {
+            assertThat(context).hasFailed();
+            assertThat(context.getStartupFailure())
+                .hasRootCauseInstanceOf(IllegalArgumentException.class)
+                .hasRootCauseMessage("The cache TTL must be positive, got PT0S");
         });
     }
 

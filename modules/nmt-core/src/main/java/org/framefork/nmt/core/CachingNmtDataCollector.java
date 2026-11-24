@@ -3,6 +3,7 @@ package org.framefork.nmt.core;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
+import java.util.Objects;
 
 /**
  * Wraps an {@link NmtDataCollector} with time-based caching to avoid
@@ -27,6 +28,11 @@ public final class CachingNmtDataCollector implements NmtDataCollector
 
     public CachingNmtDataCollector(NmtDataCollector delegate, Duration ttl)
     {
+        Objects.requireNonNull(ttl, "ttl");
+        if (ttl.isZero() || ttl.isNegative()) {
+            throw new IllegalArgumentException("The cache TTL must be positive, got " + ttl);
+        }
+
         this.delegate = delegate;
         this.ttlNanos = ttl.toNanos();
     }
